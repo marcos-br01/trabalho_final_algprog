@@ -41,20 +41,7 @@ struct equipe {
 //Observação: todas as funções necessitam da struct equipe para pegar os dados necessários, 
 //do vetor equipes[] para guardar ou buscar as equipes e quantidades para contar quantas equipes existem
 
-// Exibe as opcoes disponiveis para o usuario.
-void menu() {
 
-    printf("\n========================================\n");
-    printf("       MARATONA DE PROGRAMACAO ABC\n");
-    printf("========================================\n");
-
-    printf("1 - Cadastrar equipe\n");
-    printf("2 - Buscar por instituicao\n");
-    printf("3 - Registrar submissao\n");
-    printf("4 - Exibir placar\n");
-    printf("0 - Sair\n");
-
-}
 
 // CADASTRO DE EQUIPES
 
@@ -159,48 +146,64 @@ void exibir_placar(equipe equipes[], int quantidade){
 }
 //------------------------------------------------
 
-int main(){
-        //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar 
-        equipe equipes[MAX_EQUIPES];
+// Exibe o menu para o usuário e coleta a entrada do mesmo, iniciando a função desejada.
+int menu() {
+    //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar
+    equipe equipes[MAX_EQUIPES];
 
-        // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
-        int quantidade_equipes = 0;
-        int opcao;
-        
-        menu();
-        printf("\nEscolha uma opcao: ");
-        scanf("%d", &opcao);
-        
-        while(opcao != 0){
-            
-            switch (opcao) {
+    // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
+    int quantidade_equipes = 0;
+    int opcao;
 
-                //opção de cadastrar equipes
-                case 1:
-                    cadastrar_equipe(equipes, quantidade_equipes);
-                    break;
+    //Título decorado para a interface
+    printf("\n========================================\n");
+    printf("       MARATONA DE PROGRAMACAO ABC\n");
+    printf("========================================\n");
 
-                //opção de buscar instituição    
-                case 2:
-                   buscar_instituicao(equipes, quantidade_equipes);
-                    break;
+    //Lista de opções para o usuário
+    printf("1 - Cadastrar equipe\n");
+    printf("2 - Buscar por instituicao\n");
+    printf("3 - Registrar submissao\n");
+    printf("4 - Exibir placar\n");
+    printf("0 - Sair\n");
+
+    printf("\nEscolha uma opcao: ");
+    scanf("%d", &opcao);
+
+        switch (opcao) {
+            //opção de cadastrar equipes
+            case 1:
+                cadastrar_equipe(equipes, quantidade_equipes);
+                break;
+
+                //opção de buscar instituição
+            case 2:
+                buscar_instituicao(equipes, quantidade_equipes);
+                break;
 
                 //opção de registrar submissão, ou seja, registrar por uma equipe a resolução de um problema
-                case 3:
-                    registrar_submissao(equipes, quantidade_equipes);
-                    break;
+            case 3:
+                registrar_submissao(equipes, quantidade_equipes);
+                break;
 
                 //opção que exibe o placar da competição em ordem de quem fez com mais AC ou PE, além de, para critério de desempate, que fez em menor tempo
-                case 4:
-                    exibir_placar(equipes, quantidade_equipes);
-                    break;
+            case 4:
+                exibir_placar(equipes, quantidade_equipes);
+                break;
 
-                case 0:
-                    printf("\nEncerrando o programa...\n");
-                    break;
+            case 0:
+                printf("\nEncerrando o programa...\n");
+                break;
 
-                default:
-                    printf("\nOpcao invalida! Tente novamente.\n");
-            }
-    }
+            default:
+                printf("\nOpcao invalida! Tente novamente.\n");
+                break;
+        }
+    return opcao;
+}
+
+int main(){
+    int continua = 1;
+    while (continua != 0)
+        continua = menu();
 }
