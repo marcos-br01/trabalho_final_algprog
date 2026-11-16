@@ -155,6 +155,9 @@ int menu() {
     int quantidade_equipes = 0;
     int opcao;
 
+    //Limpa a tela antes de imprimir o menu
+    system("cls");
+
     //Título decorado para a interface
     printf("\n========================================\n");
     printf("       MARATONA DE PROGRAMACAO ABC\n");
@@ -191,14 +194,27 @@ int menu() {
                 exibir_placar(equipes, quantidade_equipes);
                 break;
 
+                //Fechar o programa
             case 0:
                 printf("\nEncerrando o programa...\n");
+
+                //Limpar o \n da última entrada do usuário
+                getchar();
+                //Espera o \n do usuário, assim tendo tempo para o usuário ler a mensagem de erro
+                getchar();
                 break;
 
+                //Caso o usuário insira uma opção inválida
             default:
-                printf("\nOpcao invalida! Tente novamente.\n");
+                printf("\nOpcao invalida! Por favor digite uma opcao valida.\n");
+
+                //Limpar o \n da última entrada do usuário
+                getchar();
+                //Espera o \n do usuário, assim tendo tempo para o usuário ler a mensagem de erro
+                getchar();
                 break;
         }
+
     return opcao;
 }
 
