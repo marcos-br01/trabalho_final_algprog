@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 //definição fixa do máximo de equipes
-#define MAX_EQUIPES 5000
+#define MAX_EQUIPES 5
 
 //definição fixa do máximo de problemas que podem ser solucionadas
 #define MAX_PROBLEMAS 14
@@ -141,7 +141,7 @@ int cadastrar_equipe(struct equipe equipes[], int quantidade){
 // }
 //função determinada para pesquisar uma instituição
 void buscar_instituicao(struct equipe equipes[], int quantidade){
-        printf("Teste");
+        printf("Teste Git");
 }
 //----------------------------------------------------
 
@@ -157,7 +157,7 @@ void registrar_submissao(struct equipe equipes[], int quantidade){
 //PARTE EXIBIÇÃO DO PLACAR
 
 //exibição do placar de quantas tentativas e quanto tempo foi resolvido o problema
-void exibir_placar(struct equipe equipes[], int quantidade){
+void exibir_placar(equipe equipes[], int quantidade){
         printf("Teste");
 
 }
@@ -165,7 +165,7 @@ void exibir_placar(struct equipe equipes[], int quantidade){
 
 int main(){
         //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar 
-        struct equipe equipes[MAX_EQUIPES];
+        equipe equipes[MAX_EQUIPES];
 
         // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
         int quantidade_equipes = 0;
