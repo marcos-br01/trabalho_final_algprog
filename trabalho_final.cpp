@@ -217,8 +217,12 @@ int menu() {
     return opcao;
 }
 
+//Declaração da main
 int main(){
+    //Declara variável continua e atribui 1 pra garantir que o menu será impresso, futuramente ela armazenará
+    //a opção do usuário no menu.
     int continua = 1;
+    //Continua imprimindo o menu até que o usuário não queira mais
     while (continua != 0)
-        continua = menu();
+        continua = menu(); //Muda o valor de continua para a opção selecionada pelo usuário no menu
 }
