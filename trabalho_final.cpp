@@ -35,7 +35,7 @@ struct equipe {
     //interliga com o struct problema
     // vetor com 14 estruturas do tipo problema, representando as questoes de A ate N.
     // cada posicao armazena as tentativas, o status de resolucao e o tempo de aceite de uma questao especifica para a equipe.
-    struct problema problemas[MAX_PROBLEMAS];
+    problema problemas[MAX_PROBLEMAS];
 };
 
 //Observação: todas as funções necessitam da struct equipe para pegar os dados necessários, 
@@ -59,7 +59,7 @@ void menu() {
 // CADASTRO DE EQUIPES
 
 //função para validar se existe alguma equipe de mesmo nome
-void validar_nome_equipe(struct equipe equipes[], int quantidade){
+void validar_nome_equipe(equipe equipes[], int quantidade){
     int nome_rep = 1; // sinaliza que não há nome repetido
     
     while(nome_rep == 1){
@@ -89,7 +89,7 @@ void validar_nome_equipe(struct equipe equipes[], int quantidade){
 
 
 //função determinada para cadastrar as equipes
-int cadastrar_equipe(struct equipe equipes[], int quantidade){
+void cadastrar_equipe(equipe equipes[], int quantidade){
     if(quantidade >= MAX_EQUIPES){
         printf("Número máximo de equipes atingido");
     }
@@ -125,10 +125,6 @@ int cadastrar_equipe(struct equipe equipes[], int quantidade){
     //somador que indica que existe mais uma equipe
     quantidade++;
     printf("Equipe cadastrada com sucesso\n");
-    
-    //adiciona na própria que existe uma equipe nova adicionada
-    return quantidade;
-    
 }
 // -------------------------------------
 
@@ -205,8 +201,6 @@ int main(){
 
                 default:
                     printf("\nOpcao invalida! Tente novamente.\n");
-                
-
             }
     }
 }
