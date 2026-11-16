@@ -77,41 +77,40 @@ void validar_nome_equipe(equipe equipes[], int quantidade){
 
 //função determinada para cadastrar as equipes
 void cadastrar_equipe(equipe equipes[], int quantidade){
-    if(quantidade >= MAX_EQUIPES){
-        printf("Número máximo de equipes atingido");
+    while(quantidade < MAX_EQUIPES){
+        //parte para digitar o nome da equipe
+        printf("Digite o nome da equipe: ");
+        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e o nome serve para o user
+        //escrever o nome da equipe
+        scanf(" %50s", equipes[quantidade].nome);
+        printf("\n");
+
+        validar_nome_equipe(equipes, quantidade);
+
+
+        //OBS.: ESSA PARTE É DE TESTES(por enquanto)
+        //parte para escolher a instituição da equipe
+        printf("Escolha a instituicao da sua equipe: ");
+        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
+        //escolher qual instituição
+        scanf(" %50s", equipes[quantidade].instituicao);
+        printf("\n");
+
+
+        //parte para pegar o nome de cada integrante do grupo
+        //o laço é utilizado para delimitar que podem só ser adicionados até 3 integrantes
+        for (int integrante = 0; integrante < 3; integrante++) {
+            printf("Nome do integrante %d: ", integrante + 1);
+            //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a
+            // variável 'integrante' serve para que possa guardar cada integrante do grupo no vetor
+            scanf(" %100[^\n]", equipes[quantidade].integrantes[integrante]);
+        }
+
+        //somador que indica que existe mais uma equipe
+        quantidade++;
+        printf("Equipe cadastrada com sucesso\n");
     }
-    
-    //parte para digitar o nome do usuário
-    printf("Digite o nome da equipe: ");
-    //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e o nome serve para o user
-    //escrever o nome da equipe
-    scanf(" %50s", equipes[quantidade].nome);
-    printf("\n");
-    
-    validar_nome_equipe(equipes, quantidade);
-        
-    
-    //OBS.: ESSA PARTE É DE TESTES(por enquanto)
-    //parte para escolher a instituição da equipe
-    printf("Escolha a instituicao da sua equipe: ");
-    //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
-    //escolher qual instituição
-    scanf(" %50s", equipes[quantidade].instituicao);
-    printf("\n");
-
-
-    //parte para pegar o nome de cada integrante do grupo
-    //o laço é utilizado para delimitar que podem só ser adicionados até 3 integrantes
-    for (int integrante = 0; integrante < 3; integrante++) {
-        printf("Nome do integrante %d: ", integrante + 1);
-        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a 
-        // variável 'integrante' serve para que possa guardar cada integrante do grupo no vetor 
-        scanf(" %100[^\n]", equipes[quantidade].integrantes[integrante]);
-    }
-
-    //somador que indica que existe mais uma equipe
-    quantidade++;
-    printf("Equipe cadastrada com sucesso\n");
+    printf("Numero maximo de equipes atingido!\n");
 }
 // -------------------------------------
 
