@@ -76,7 +76,6 @@ void validar_nome_equipe(equipe equipes[], int quantidade){
     
 }
 
-
 //função determinada para cadastrar as equipes
 int cadastrar_equipe(equipe equipes[], int quantidade){
 
