@@ -9,6 +9,12 @@
 //definição fixa do máximo de problemas que podem ser solucionadas
 #define MAX_PROBLEMAS 14
 
+//Tamanho máximo de nomes de organizações (equipes e instituições)
+#define TAM_MAX_NOME_ORG 51
+
+//Tamanho máximo de nomes próprios
+#define TAM_MAX_NOME_PRO 101
+
 // Estrutura que armazena o desempenho de cada problema.
 struct problema {
     //número de tentativas que a equipe realizou
@@ -24,13 +30,13 @@ struct problema {
 // Estrutura que armazena os dados de cada equipe.
 struct equipe {
     //armazena o nome da equipe
-    char nome[51];
+    char nome[TAM_MAX_NOME_ORG];
 
     //armazena qual instituição a equipe está vinculada
-    char instituicao[51];
+    char instituicao[TAM_MAX_NOME_ORG];
 
-    //armazena os integrantes da equipe. [3] -> armazena quantos integrantes serão cadastrados. [101] -> armazena uma quantidade de espaço para cada integrante cadastrar seu nome
-    char integrantes[3][101];
+    //armazena os integrantes da equipe. [3] -> armazena quantos integrantes serão cadastrados. [TAM_MAX_NOME_PRO] -> armazena uma quantidade de espaço para cada integrante cadastrar seu nome
+    char integrantes[3][TAM_MAX_NOME_PRO];
 
     //interliga com o struct problema
     // vetor com 14 estruturas do tipo problema, representando as questoes de A ate N.
@@ -41,7 +47,13 @@ struct equipe {
 //Observação: todas as funções necessitam da struct equipe para pegar os dados necessários, 
 //do vetor equipes[] para guardar ou buscar as equipes e quantidades para contar quantas equipes existem
 
+// LIMPEZA DO BUFFER DO CONSOLE
 
+//Função gerada com IA para limpar o buffer do console
+void limpaBuffer() {
+    int come_lixo;
+    while ((come_lixo = getchar()) != '\n' && come_lixo != EOF);
+}
 
 // CADASTRO DE EQUIPES
 
@@ -79,11 +91,15 @@ void validar_nome_equipe(equipe equipes[], int quantidade){
 //função determinada para cadastrar as equipes
 int cadastrar_equipe(equipe equipes[], int quantidade){
 
+
     //diz que o usuário não quer voltar para o menu
     char voltar = 'N';
 
     //diz que enquanto o usuário não der S ou s, o código continua, se apertar essa opção, ele voltará ao menu com as opções
     while(voltar != 'S' || voltar != 's'){
+
+        //Limpa o buffer do console
+        limpaBuffer();
 
         if(quantidade >= MAX_EQUIPES){
             printf("Limite de equipes máximas atingido!");
@@ -93,10 +109,10 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
         printf("Digite o nome da equipe: ");
         //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e o nome serve para o user
         //escrever o nome da equipe
-        scanf(" %50s", equipes[quantidade].nome);
+        fgets(equipes[quantidade].nome, TAM_MAX_NOME_ORG, stdin );
         printf("\n");
 
-        //função para validar corretamentes se o nome da equipe está declarado dentro dos termos previstos
+        //função para validar corretamente se o nome da equipe está declarado dentro dos termos previstos
         validar_nome_equipe(equipes, quantidade);
 
 
@@ -105,7 +121,7 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
         printf("Escolha a instituicao da sua equipe: ");
         //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
         //escolher qual instituição
-        scanf(" %50s", equipes[quantidade].instituicao);
+        fgets(equipes[quantidade].instituicao, TAM_MAX_NOME_ORG, stdin );
         printf("\n");
 
 
@@ -113,9 +129,10 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
         //o laço é utilizado para delimitar que podem só ser adicionados até 3 integrantes
         for (int integrante = 0; integrante < 3; integrante++) {
             printf("Nome do integrante %d: ", integrante + 1);
+
             //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a
             // variável 'integrante' serve para que possa guardar cada integrante do grupo no vetor
-            scanf(" %100[^\n]", equipes[quantidade].integrantes[integrante]);
+            fgets(equipes[quantidade].integrantes[integrante], TAM_MAX_NOME_PRO, stdin);
         }
 
         //somador que indica que existe mais uma equipe
@@ -128,13 +145,10 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
         //serve para quando o usuário colocar S ou s, ele guarda a equipe e vai direto para a main para voltar para a função
         if(voltar == 'S' || voltar == 's')
             return quantidade;
-        
-    }   
-
+    }
     //serve para retornar um valor definido que a variável está armazenando das equipes, sem ele, não seria armazenado uma equipe
     //para uma consulta de instituição, por exemplo
     return quantidade;
-    
 }
 // -------------------------------------
 
@@ -170,12 +184,7 @@ void exibir_placar(equipe equipes[], int quantidade){
 //------------------------------------------------
 
 // Exibe o menu para o usuário e coleta a entrada do mesmo, iniciando a função desejada.
-int menu() {
-    //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar
-    equipe equipes[MAX_EQUIPES];
-
-    // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
-    int quantidade_equipes = 0;
+int menu(equipe equipes[], int quantidade_equipes) {
     int opcao;
 
     //Limpa a tela antes de imprimir o menu
@@ -243,10 +252,17 @@ int menu() {
 
 //Declaração da main
 int main(){
+    //Declara a variável(struct) equipes, do tipo equipe.
+    equipe equipes[MAX_EQUIPES];
+
+    // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
+    int quantidade_equipes = 0;
+
     //Declara variável continua e atribui 1 pra garantir que o menu será impresso, futuramente ela armazenará
     //a opção do usuário no menu.
     int continua = 1;
+
     //Continua imprimindo o menu até que o usuário não queira mais
     while (continua != 0)
-        continua = menu(); //Muda o valor de continua para a opção selecionada pelo usuário no menu
+        continua = menu(equipes, quantidade_equipes); //Muda o valor de continua para a opção selecionada pelo usuário no menu
 }
