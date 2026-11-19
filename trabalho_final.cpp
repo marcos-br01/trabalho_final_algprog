@@ -147,7 +147,7 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
     
 // }
 //função determinada para pesquisar uma instituição
-void buscar_instituicao(struct equipe equipes[], int quantidade){
+void buscar_instituicao(equipe equipes[], int quantidade){
         printf("Teste Git");
 }
 //----------------------------------------------------
@@ -155,7 +155,7 @@ void buscar_instituicao(struct equipe equipes[], int quantidade){
 //PARTE DE SUBMISSÃO
 
 //registrar submissões(soluções)feitas pela equipe
-void registrar_submissao(struct equipe equipes[], int quantidade){
+void registrar_submissao(equipe equipes[], int quantidade){
         printf("Teste");
 
 }
