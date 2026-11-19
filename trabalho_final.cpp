@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 //definição fixa do máximo de equipes
-#define MAX_EQUIPES 5000
+#define MAX_EQUIPES 5
 
 //definição fixa do máximo de problemas que podem ser solucionadas
 #define MAX_PROBLEMAS 14
@@ -35,42 +35,31 @@ struct equipe {
     //interliga com o struct problema
     // vetor com 14 estruturas do tipo problema, representando as questoes de A ate N.
     // cada posicao armazena as tentativas, o status de resolucao e o tempo de aceite de uma questao especifica para a equipe.
-    struct problema problemas[MAX_PROBLEMAS];
+    problema problemas[MAX_PROBLEMAS];
 };
 
 //Observação: todas as funções necessitam da struct equipe para pegar os dados necessários, 
 //do vetor equipes[] para guardar ou buscar as equipes e quantidades para contar quantas equipes existem
 
-// Exibe as opcoes disponiveis para o usuario.
-void menu() {
 
-    printf("\n========================================\n");
-    printf("       MARATONA DE PROGRAMACAO ABC\n");
-    printf("========================================\n");
-
-    printf("1 - Cadastrar equipe\n");
-    printf("2 - Buscar por instituicao\n");
-    printf("3 - Registrar submissao\n");
-    printf("4 - Exibir placar\n");
-    printf("0 - Sair\n");
-
-}
 
 // CADASTRO DE EQUIPES
 
 //função para validar se existe alguma equipe de mesmo nome
-void validar_nome_equipe(struct equipe equipes[], int quantidade){
-    int nome_rep = 1; // sinaliza que não há nome repetido
+void validar_nome_equipe(equipe equipes[], int quantidade){
+    int nome_rep = 1; // sinaliza que não há nome repetido, para entrar no while
     
+    //repete enquanto for 1
     while(nome_rep == 1){
-        nome_rep = 0;
+        //assume que o nome está livre, zerando a repetição
+        nome_rep = 0;  
     //ver se existe algum nome de equipe igual
         for(int i = 0; i < quantidade; i++){
             //strcmp retorna 0 se os dois nomes forem iguais
             if(strcmp(equipes[quantidade].nome, equipes[i].nome )== 0){
-                printf("Nome de equipe já existente. Escolha outro nome:");
+                printf("Nome de equipe já existente. Escolha outro nome:\n");
                 scanf("%50s", &equipes[quantidade].nome);
-                nome_rep = 1;
+                nome_rep = 1; // achou repetido, liga o "sinal" denovo
                 break;
             }
             
@@ -89,44 +78,62 @@ void validar_nome_equipe(struct equipe equipes[], int quantidade){
 
 
 //função determinada para cadastrar as equipes
-int cadastrar_equipe(struct equipe equipes[], int quantidade){
-    if(quantidade >= MAX_EQUIPES){
-        printf("Número máximo de equipes atingido");
-    }
-    
-    //parte para digitar o nome do usuário
-    printf("Digite o nome da equipe: ");
-    //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e o nome serve para o user
-    //escrever o nome da equipe
-    scanf(" %50s", equipes[quantidade].nome);
-    printf("\n");
-    
-    validar_nome_equipe(equipes, quantidade);
+int cadastrar_equipe(equipe equipes[], int quantidade){
+
+    //diz que o usuário não quer voltar para o menu
+    char voltar = 'N';
+
+    //diz que enquanto o usuário não der S ou s, o código continua, se apertar essa opção, ele voltará ao menu com as opções
+    while(voltar != 'S' || voltar != 's'){
+
+        if(quantidade >= MAX_EQUIPES){
+            printf("Limite de equipes máximas atingido!");
+        }
+
+        //parte para digitar o nome da equipe
+        printf("Digite o nome da equipe: ");
+        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e o nome serve para o user
+        //escrever o nome da equipe
+        scanf(" %50s", equipes[quantidade].nome);
+        printf("\n");
+
+        //função para validar corretamentes se o nome da equipe está declarado dentro dos termos previstos
+        validar_nome_equipe(equipes, quantidade);
+
+
+        //OBS.: ESSA PARTE É DE TESTES(por enquanto)
+        //parte para escolher a instituição da equipe
+        printf("Escolha a instituicao da sua equipe: ");
+        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
+        //escolher qual instituição
+        scanf(" %50s", equipes[quantidade].instituicao);
+        printf("\n");
+
+
+        //parte para pegar o nome de cada integrante do grupo
+        //o laço é utilizado para delimitar que podem só ser adicionados até 3 integrantes
+        for (int integrante = 0; integrante < 3; integrante++) {
+            printf("Nome do integrante %d: ", integrante + 1);
+            //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a
+            // variável 'integrante' serve para que possa guardar cada integrante do grupo no vetor
+            scanf(" %100[^\n]", equipes[quantidade].integrantes[integrante]);
+        }
+
+        //somador que indica que existe mais uma equipe
+        quantidade++;
+        printf("Equipe cadastrada com sucesso\n");
         
-    
-    //OBS.: ESSA PARTE É DE TESTES(por enquanto)
-    //parte para escolher a instituição da equipe
-    printf("Escolha a instituicao da sua equipe: ");
-    //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
-    //escolher qual instituição
-    scanf(" %50s", equipes[quantidade].instituicao);
-    printf("\n");
+        printf("Deseja voltar ao menu? (S ou N): \n");
+        scanf(" %c", &voltar);
 
+        //serve para quando o usuário colocar S ou s, ele guarda a equipe e vai direto para a main para voltar para a função
+        if(voltar == 'S' || voltar == 's')
+            return quantidade;
+        
+    }   
 
-    //parte para pegar o nome de cada integrante do grupo
-    //o laço é utilizado para delimitar que podem só ser adicionados até 3 integrantes
-    for (int integrante = 0; integrante < 3; integrante++) {
-        printf("Nome do integrante %d: ", integrante + 1);
-        //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a 
-        // variável 'integrante' serve para que possa guardar cada integrante do grupo no vetor 
-        scanf(" %100[^\n]", equipes[quantidade].integrantes[integrante]);
-    }
-
-    //somador que indica que existe mais uma equipe
-    quantidade++;
-    printf("Equipe cadastrada com sucesso\n");
-    
-    //adiciona na própria que existe uma equipe nova adicionada
+    //serve para retornar um valor definido que a variável está armazenando das equipes, sem ele, não seria armazenado uma equipe
+    //para uma consulta de instituição, por exemplo
     return quantidade;
     
 }
@@ -141,7 +148,7 @@ int cadastrar_equipe(struct equipe equipes[], int quantidade){
 // }
 //função determinada para pesquisar uma instituição
 void buscar_instituicao(struct equipe equipes[], int quantidade){
-        printf("Teste");
+        printf("Teste Git");
 }
 //----------------------------------------------------
 
@@ -157,56 +164,90 @@ void registrar_submissao(struct equipe equipes[], int quantidade){
 //PARTE EXIBIÇÃO DO PLACAR
 
 //exibição do placar de quantas tentativas e quanto tempo foi resolvido o problema
-void exibir_placar(struct equipe equipes[], int quantidade){
+void exibir_placar(equipe equipes[], int quantidade){
         printf("Teste");
 
 }
 //------------------------------------------------
 
-int main(){
-        //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar 
-        struct equipe equipes[MAX_EQUIPES];
+// Exibe o menu para o usuário e coleta a entrada do mesmo, iniciando a função desejada.
+int menu() {
+    //"puxa" a struct equipes para que tenha algum fim de armazenar, registrar
+    equipe equipes[MAX_EQUIPES];
 
-        // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
-        int quantidade_equipes = 0;
-        int opcao;
-        
-        menu();
-        printf("\nEscolha uma opcao: ");
-        scanf("%d", &opcao);
-        
-        while(opcao != 0){
-            
-            switch (opcao) {
+    // variável para ser um contador de quantas equipes foram cadastradas até o momento de execução do código
+    int quantidade_equipes = 0;
+    int opcao;
 
-                //opção de cadastrar equipes
-                case 1:
-                    cadastrar_equipe(equipes, quantidade_equipes);
-                    break;
+    //Limpa a tela antes de imprimir o menu
+    system("cls");
 
-                //opção de buscar instituição    
-                case 2:
-                   buscar_instituicao(equipes, quantidade_equipes);
-                    break;
+    //Título decorado para a interface
+    printf("\n========================================\n");
+    printf("       MARATONA DE PROGRAMACAO ABC\n");
+    printf("========================================\n");
+
+    //Lista de opções para o usuário
+    printf("1 - Cadastrar equipe\n");
+    printf("2 - Buscar por instituicao\n");
+    printf("3 - Registrar submissao\n");
+    printf("4 - Exibir placar\n");
+    printf("0 - Sair\n");
+
+    printf("\nEscolha uma opcao: ");
+    scanf("%d", &opcao);
+
+        switch (opcao) {
+            //opção de cadastrar equipes
+            case 1:
+                cadastrar_equipe(equipes, quantidade_equipes);
+                break;
+
+                //opção de buscar instituição
+            case 2:
+                buscar_instituicao(equipes, quantidade_equipes);
+                break;
 
                 //opção de registrar submissão, ou seja, registrar por uma equipe a resolução de um problema
-                case 3:
-                    registrar_submissao(equipes, quantidade_equipes);
-                    break;
+            case 3:
+                registrar_submissao(equipes, quantidade_equipes);
+                break;
 
                 //opção que exibe o placar da competição em ordem de quem fez com mais AC ou PE, além de, para critério de desempate, que fez em menor tempo
-                case 4:
-                    exibir_placar(equipes, quantidade_equipes);
-                    break;
+            case 4:
+                exibir_placar(equipes, quantidade_equipes);
+                break;
 
-                case 0:
-                    printf("\nEncerrando o programa...\n");
-                    break;
+                //Fechar o programa
+            case 0:
+                printf("\nEncerrando o programa...\n");
 
-                default:
-                    printf("\nOpcao invalida! Tente novamente.\n");
-                
+                //Limpar o \n da última entrada do usuário
+                getchar();
+                //Espera o \n do usuário, assim tendo tempo para o usuário ler a mensagem de erro
+                getchar();
+                break;
 
-            }
-    }
+                //Caso o usuário insira uma opção inválida
+            default:
+                printf("\nOpcao invalida! Por favor digite uma opcao valida.\n");
+
+                //Limpar o \n da última entrada do usuário
+                getchar();
+                //Espera o \n do usuário, assim tendo tempo para o usuário ler a mensagem de erro
+                getchar();
+                break;
+        }
+
+    return opcao;
+}
+
+//Declaração da main
+int main(){
+    //Declara variável continua e atribui 1 pra garantir que o menu será impresso, futuramente ela armazenará
+    //a opção do usuário no menu.
+    int continua = 1;
+    //Continua imprimindo o menu até que o usuário não queira mais
+    while (continua != 0)
+        continua = menu(); //Muda o valor de continua para a opção selecionada pelo usuário no menu
 }
