@@ -35,7 +35,9 @@ struct equipe {
     //armazena qual instituição a equipe está vinculada
     char instituicao[TAM_MAX_NOME_ORG];
 
-    //armazena os integrantes da equipe. [3] -> armazena quantos integrantes serão cadastrados. [TAM_MAX_NOME_PRO] -> armazena uma quantidade de espaço para cada integrante cadastrar seu nome
+    //armazena os integrantes da equipe. [3] -> armazena quantos integrantes serão cadastrados. 
+    //[TAM_MAX_NOME_PRO] -> armazena uma quantidade de espaço para cada integrante cadastrar seu nome.
+
     char integrantes[3][TAM_MAX_NOME_PRO];
 
     //interliga com o struct problema
@@ -47,15 +49,27 @@ struct equipe {
 //Observação: todas as funções necessitam da struct equipe para pegar os dados necessários, 
 //do vetor equipes[] para guardar ou buscar as equipes e quantidades para contar quantas equipes existem
 
-// LIMPEZA DO BUFFER DO CONSOLE
 
-//Função gerada com IA para limpar o buffer do console
+// LIMPEZA DO BUFFER DO CONSOLE
+//Função para limpar o buffer do console
 void limpaBuffer() {
     int come_lixo;
     while ((come_lixo = getchar()) != '\n' && come_lixo != EOF);
 }
 
 // CADASTRO DE EQUIPES
+
+//função para contar quantas equipes já foram cadastradas
+int contar_equipes(equipe equipes[]){
+    int total = 0;
+
+    //loop que só irá contar a equipe se a quantidade máxima de equipes for menor do que a definida
+    // e se o nome for diferente de vazio
+    while(total < MAX_EQUIPES && equipes[total].nome[0] != '\0'){
+        total++;
+    }
+    return total;
+}
 
 //função para validar se existe alguma equipe de mesmo nome
 void validar_nome_equipe(equipe equipes[], int quantidade){
@@ -88,21 +102,40 @@ void validar_nome_equipe(equipe equipes[], int quantidade){
     
 }
 
+//função para perguntar se o usuário quer voltar para o menu
+int perguntar_voltar(){
+    char voltar = 0;
+
+    printf("Deseja voltar ao menu? (S ou N): \n");
+        scanf(" %c", &voltar);
+
+    while(voltar != 'S' && voltar != 's' && voltar != 'N' && voltar != 'n'){
+        printf("Resposta incorreta. Digite S ou N");
+        scanf(" %c", &voltar);
+    }
+    //serve para quando o usuário colocar S ou s, ele guarda a equipe e vai direto para a main para voltar para a função
+    if(voltar == 'S' || voltar == 's'){
+        return 1;
+    }
+    return 0;
+}
+
 //função determinada para cadastrar as equipes
 int cadastrar_equipe(equipe equipes[], int quantidade){
 
-
-    //diz que o usuário não quer voltar para o menu
-    char voltar = 'N';
+    //variável que diz que o loop continuará, somente irá parar para ir para a função perguntar_voltar se retornar 1
+    int voltar_menu  = 0;
 
     //diz que enquanto o usuário não der S ou s, o código continua, se apertar essa opção, ele voltará ao menu com as opções
-    while(voltar != 'S' || voltar != 's'){
-
+    while(voltar_menu == 0){
+        printf("DEBUG: quantidade ao entrar = %d\n", quantidade);
         //Limpa o buffer do console
         limpaBuffer();
 
         if(quantidade >= MAX_EQUIPES){
             printf("Limite de equipes máximas atingido!");
+            //serve para que pare de gravar as equipes no vetor quando o valor é chegado ao limite
+            return quantidade;
         }
 
         //parte para digitar o nome da equipe
@@ -137,14 +170,8 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
 
         //somador que indica que existe mais uma equipe
         quantidade++;
-        printf("Equipe cadastrada com sucesso\n");
+        voltar_menu = perguntar_voltar();
         
-        printf("Deseja voltar ao menu? (S ou N): \n");
-        scanf(" %c", &voltar);
-
-        //serve para quando o usuário colocar S ou s, ele guarda a equipe e vai direto para a main para voltar para a função
-        if(voltar == 'S' || voltar == 's')
-            return quantidade;
     }
     //serve para retornar um valor definido que a variável está armazenando das equipes, sem ele, não seria armazenado uma equipe
     //para uma consulta de instituição, por exemplo
@@ -185,7 +212,12 @@ void exibir_placar(equipe equipes[], int quantidade){
 
 // Exibe o menu para o usuário e coleta a entrada do mesmo, iniciando a função desejada.
 int menu(equipe equipes[], int quantidade_equipes) {
+    
     int opcao;
+
+    //a variável apresentada irá ser igual a função de contar_equipes que serve para contar 
+    // a quantidade de equipes no vetor equipes
+    quantidade_equipes = contar_equipes(equipes);
 
     //Limpa a tela antes de imprimir o menu
     system("cls");
@@ -208,7 +240,7 @@ int menu(equipe equipes[], int quantidade_equipes) {
         switch (opcao) {
             //opção de cadastrar equipes
             case 1:
-                cadastrar_equipe(equipes, quantidade_equipes);
+                quantidade_equipes += cadastrar_equipe(equipes, quantidade_equipes);
                 break;
 
                 //opção de buscar instituição
