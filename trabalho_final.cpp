@@ -52,7 +52,7 @@ struct equipe {
 
 // LIMPEZA DO BUFFER DO CONSOLE
 //Função para limpar o buffer do console
-void limpaBuffer() {
+void limpa_buffer() {
     int come_lixo;
     while ((come_lixo = getchar()) != '\n' && come_lixo != EOF);
 }
@@ -72,25 +72,38 @@ int contar_equipes(equipe equipes[]){
 }
 
 //função para validar se existe alguma equipe de mesmo nome
-void validar_nome_equipe(equipe equipes[], int quantidade){
-    int nome_rep = 1; // sinaliza que não há nome repetido, para entrar no while
-    
-    //repete enquanto for 1
-    while(nome_rep == 1){
-        //assume que o nome está livre, zerando a repetição
-        nome_rep = 0;  
+int validar_nome_equipe(equipe equipes[], int quantidade){
+    char sim_nao;  
     //ver se existe algum nome de equipe igual
         for(int i = 0; i < quantidade; i++){
             //strcmp retorna 0 se os dois nomes forem iguais
             if(strcmp(equipes[quantidade].nome, equipes[i].nome )== 0){
-                printf("Nome de equipe já existente. Escolha outro nome:\n");
-                scanf("%50s", &equipes[quantidade].nome);
-                nome_rep = 1; // achou repetido, liga o "sinal" denovo
-                break;
+                printf("Nome de equipe já existente. Deseja atualizar os dados da equipe?(S ou N)\n");
+                scanf(" %c", &sim_nao);
+
+                //loop se o usuário digitar alguma letra ou algo diferente de S ou N
+                while(sim_nao != 'S' && sim_nao != 's' && sim_nao != 'N' &&sim_nao != 'n'){
+                    printf("Resposta Incorreta. Digite S ou N\n");
+                    scanf(" %c", &sim_nao);
+                }
+
+                limpa_buffer();
+
+                if(sim_nao == 'S' ||sim_nao == 's'){
+                    return i; //retorna aonde é a posição que será alterada
+                }else if(sim_nao == 'N' || sim_nao == 'n'){
+                    //Obs.: não foi utilizado 0 e 1 por conta das posições do vetor 0 e 1.
+                    //Por isso, os returns estão como -1 e -2, mas poderiam ser, por exemplo, -5, -6
+                    return -2; //existe, porém não quer atualizar
+                }
             }
             
         }
+        //nome novo, porque quando se encontra algo e não retorna, retorna -1.  
+        //Por isso, nós pensamos em colocar -1 para quando não retornar nada, ser uma opção de nome novo
+        return -1; 
     }
+    //código que será utilizado, talvez, em breve
     // //ver se existe algum nome de algum integrante repetido
     // for(int i = 0; i < quantidade; i++){
     //     for(int j = i + 1; j < quantidade; j++){
@@ -100,7 +113,7 @@ void validar_nome_equipe(equipe equipes[], int quantidade){
     //     }
     // }
     
-}
+
 
 //função para perguntar se o usuário quer voltar para o menu
 int perguntar_voltar(){
@@ -126,11 +139,13 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
     //variável que diz que o loop continuará, somente irá parar para ir para a função perguntar_voltar se retornar 1
     int voltar_menu  = 0;
 
+    //indica a posição do vetor aonde os dados serão gravados
+    int posicao;
     //diz que enquanto o usuário não der S ou s, o código continua, se apertar essa opção, ele voltará ao menu com as opções
     while(voltar_menu == 0){
         printf("DEBUG: quantidade ao entrar = %d\n", quantidade);
         //Limpa o buffer do console
-        limpaBuffer();
+        limpa_buffer();
 
         if(quantidade >= MAX_EQUIPES){
             printf("Limite de equipes máximas atingido!");
@@ -146,10 +161,22 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
         printf("\n");
 
         //função para validar corretamente se o nome da equipe está declarado dentro dos termos previstos
-        validar_nome_equipe(equipes, quantidade);
+        posicao = validar_nome_equipe(equipes, quantidade);
+        //condição que colocará vazio se o usuário não quer atualizar o cadastro
+        if(posicao == -2){
+            equipes[quantidade].nome[0] = '\0';
+            printf("Operação cancelada\n");
+            voltar_menu = perguntar_voltar();
+            continue;
+        }else if(posicao == -1){
+            //nome novo: grava na posicao livre
+            posicao = quantidade;             
+        }else{
+            //atualizacao: limpa o nome lido na posicao livre
+            equipes[quantidade].nome[0] = '\0';  
+        }
+        
 
-
-        //OBS.: ESSA PARTE É DE TESTES(por enquanto)
         //parte para escolher a instituição da equipe
         printf("Escolha a instituicao da sua equipe: ");
         //o vetor equipes guarda as informações dela, quantidades serve para escolher uma posição no vetor e a instituição serve para o user
@@ -170,6 +197,7 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
 
         //somador que indica que existe mais uma equipe
         quantidade++;
+        printf("Dados Cadastrados com sucesso\n");
         voltar_menu = perguntar_voltar();
         
     }
@@ -188,6 +216,14 @@ int cadastrar_equipe(equipe equipes[], int quantidade){
 // }
 //função determinada para pesquisar uma instituição
 void buscar_instituicao(equipe equipes[], int quantidade){
+    //Buscar pelo nome da instituição
+    char buscar[TAM_MAX_NOME_ORG];
+
+    //ordenar a posição das equipes 
+    int indice[MAX_EQUIPES];
+
+    //quantas equipes foram encontradas
+    int total = 0; 
         printf("Teste Git");
 }
 //----------------------------------------------------
